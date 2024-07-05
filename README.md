@@ -4,9 +4,11 @@ Welcome to the Word Synonyms App! This application allows you to manage words an
 
 ## 📂 Project Structure
 
+```md
 word-synonyms/
 ├── backend/ # Go backend code
 └── frontend/ # React frontend code
+```
 
 ## 🚀 Getting Started
 
@@ -15,8 +17,9 @@ word-synonyms/
 - [Go](https://golang.org/dl/) (for the backend)
 - [Node.js and npm](https://nodejs.org/en/download/) (for the frontend)
 
-### Run Api
+### Run API
 
 ```sh
+cd backend
 go run main.go
 ```
