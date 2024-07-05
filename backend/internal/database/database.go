@@ -8,16 +8,16 @@ import (
 
 const InitialQuery = `
 CREATE TABLE IF NOT EXISTS Words (
-					id INTEGER PRIMARY KEY AUTOINCREMENT, 
-					word VARCHAR(255) UNIQUE NOT NULL
-				); 
-				CREATE TABLE Synonyms (
-    				word_id INT,
-					synonym_id INT,
-					PRIMARY KEY (word_id, synonym_id),
-					FOREIGN KEY (word_id) REFERENCES Words(word_id),
-					FOREIGN KEY (synonym_id) REFERENCES Words(word_id)
-				);`
+			id INTEGER PRIMARY KEY AUTOINCREMENT, 
+			word VARCHAR(255) UNIQUE NOT NULL
+		); 
+		CREATE TABLE Synonyms (
+			word_id INT,
+			synonym_id INT,
+			PRIMARY KEY (word_id, synonym_id),
+			FOREIGN KEY (word_id) REFERENCES Words(word_id),
+			FOREIGN KEY (synonym_id) REFERENCES Words(word_id)
+		);`
 
 func ConnectAndInitDB(dbPath string) (*sql.DB, error) {
 	db, err := sql.Open("sqlite", dbPath)
