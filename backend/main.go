@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	dbPath := "app.db ./go-sqlite-demo"
+	dbPath := "app.db"
 	database, err := database.ConnectAndInitDB(dbPath)
 	if err != nil {
 		panic(err)
@@ -22,8 +22,8 @@ func main() {
 
 func makeMux() *http.ServeMux {
 	mux := http.NewServeMux()
-	mux.HandleFunc("GET /{$}", handleHello)
 	mux.HandleFunc("POST /word", handleHello)
+	// mux.HandleFunc("GET /words", handleHello)
 	// mux.HandleFunc("POST /synonym/{word}", handleHello)
 	// mux.HandleFunc("GET /synonyms/{word}", handleHello)
 	// mux.HandleFunc("GET /words/{synonym}", handleHello)
