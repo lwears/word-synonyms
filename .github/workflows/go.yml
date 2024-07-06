@@ -21,7 +21,7 @@ jobs:
           go-version: '1.22.5'
 
       - name: Format
-        run: cd backend && gofmt ./... && git diff --exit-code
+        run: cd backend && go fmt ./... && git diff --exit-code
 
       - name: Go Vet
         run: go vet ./backend/...
