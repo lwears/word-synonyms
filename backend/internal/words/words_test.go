@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	"testing"
 
-	"api/internal/database"
-	"api/internal/words"
+	"github.com/lwears/word-synonyms/internal/database"
+	"github.com/lwears/word-synonyms/internal/words"
 )
 
 func setupTestDB(t *testing.T) *sql.DB {

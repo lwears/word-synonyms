@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"api/internal/database"
+	"github.com/lwears/word-synonyms/internal/database"
 )
 
 func main() {
