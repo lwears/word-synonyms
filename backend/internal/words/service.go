@@ -168,3 +168,31 @@ func (s *WordService) GetSynonyms(w *WordDbRow) (Synonyms, error) {
 
 	return synonyms, nil
 }
+
+func (s *WordService) GetWordsForSynonym(synonym *WordDbRow) (WordsForSynonym, error) {
+	wordsForSynonym := WordsForSynonym{
+		Synonym: synonym.Word,
+		Words:   make([]string, 0),
+	}
+
+	rows, err := s.DB.QueryContext(context.Background(), GetWordsForSynonym, synonym.ID)
+	if err != nil {
+		return wordsForSynonym, err
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var synonymsResult GetSynonymsResult
+		if err := rows.Scan(&synonymsResult.SynonymID, &synonymsResult.WordID, &synonymsResult.Word); err != nil {
+			return wordsForSynonym, err
+		}
+		wordsForSynonym.Words = append(wordsForSynonym.Words, synonymsResult.Word)
+	}
+
+	if err := rows.Err(); err != nil {
+		return wordsForSynonym, fmt.Errorf("error iterating over rows: %v", err)
+	}
+
+	return wordsForSynonym, nil
+}

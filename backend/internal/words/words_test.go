@@ -70,7 +70,7 @@ func TestGetWord(t *testing.T) {
 	}
 }
 
-func TestAddSynonym(t *testing.T) {
+func TestAddAndGetSynonym(t *testing.T) {
 	db := setupTestDB(t)
 	defer db.Close()
 
@@ -105,5 +105,44 @@ func TestAddSynonym(t *testing.T) {
 	}
 	if synonyms.Synonyms[0] != synonym {
 		t.Errorf("Incorrect synonym returned %s", synonyms.Synonyms[0])
+	}
+}
+
+func TestGetWordsForSynonyms(t *testing.T) {
+	db := setupTestDB(t)
+	defer db.Close()
+
+	wordService := words.NewWordService(db)
+
+	word := "dark"
+	synonym := "shadowy"
+
+	wordDbRow, err := wordService.GetOrAddWord(word)
+	if err != nil {
+		t.Errorf("Failed get word: %v", err)
+	}
+
+	synonymWordDbRow, err := wordService.GetOrAddWord(synonym)
+	if err != nil {
+		t.Errorf("Failed get word: %v", err)
+	}
+
+	result, err := wordService.AddSynonym(wordDbRow.ID, synonymWordDbRow.ID)
+	if err != nil {
+		t.Errorf("Failed to add synonym: %v", err)
+	}
+	if result != 1 {
+		t.Errorf("expected row id to be %v got %v", 1, result)
+	}
+
+	wordsForSynonym, err := wordService.GetWordsForSynonym(synonymWordDbRow)
+	if err != nil {
+		t.Errorf("Failed to get synonyms: %v", err)
+	}
+	if wordsForSynonym.Synonym != synonymWordDbRow.Word {
+		t.Errorf("Incorrect synonym returned %s", wordsForSynonym.Synonym)
+	}
+	if wordsForSynonym.Words[0] != wordDbRow.Word {
+		t.Errorf("Incorrect synonym returned %s", wordsForSynonym.Words[0])
 	}
 }
