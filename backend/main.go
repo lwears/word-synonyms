@@ -5,9 +5,11 @@ import (
 	"net/http"
 
 	"github.com/lwears/word-synonyms/internal/database"
+	"github.com/lwears/word-synonyms/internal/words"
 )
 
 func main() {
+	// This should be passed in via env, but for the sake of simplicity ill add it here
 	dbPath := "app.db"
 	database, err := database.ConnectAndInitDB(dbPath)
 	if err != nil {
@@ -15,23 +17,20 @@ func main() {
 	}
 	defer database.Close()
 
-	mux := makeMux()
+	wordService := words.NewWordService(database)
+	wordManager := words.NewWordsHTTPHandler(*wordService)
+
+	mux := makeMux(wordManager)
 	fmt.Println("Listening for requests...")
 	http.ListenAndServe(":8090", mux)
 }
 
-func makeMux() *http.ServeMux {
+func makeMux(m *words.WordHTTPHandler) *http.ServeMux {
 	mux := http.NewServeMux()
-	mux.HandleFunc("POST /word", handleHello)
-	// mux.HandleFunc("GET /words", handleHello)
-	// mux.HandleFunc("POST /synonym/{word}", handleHello)
-	// mux.HandleFunc("GET /synonyms/{word}", handleHello)
-	// mux.HandleFunc("GET /words/{synonym}", handleHello)
+	mux.HandleFunc("POST /word", m.AddWordHandler)
+	mux.HandleFunc("GET /words", m.GetAllWordsHandler)
+	mux.HandleFunc("POST /synonym/{word}", m.AddSynonymHandler)
+	mux.HandleFunc("GET /synonyms/{word}", m.GetSynonymsHandler)
+	mux.HandleFunc("GET /words/{synonym}", m.GetWordsForSynonymHandler)
 	return mux
-}
-
-func handleHello(writer http.ResponseWriter,
-	request *http.Request,
-) {
-	fmt.Fprintf(writer, "Hello world!\n")
 }
