@@ -2,7 +2,10 @@ module github.com/lwears/word-synonyms
 
 go 1.22.5
 
-require modernc.org/sqlite v1.30.1
+require (
+	github.com/rs/cors v1.11.0
+	modernc.org/sqlite v1.30.1
+)
 
 require (
 	github.com/dustin/go-humanize v1.0.1 // indirect

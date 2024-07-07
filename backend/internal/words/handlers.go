@@ -56,7 +56,7 @@ func (h *WordHTTPHandler) AddWordHandler(w http.ResponseWriter, r *http.Request)
 
 	// Check word exists
 	wordDbRow, err := h.wordService.GetWord(req.Word)
-	if err == nil || wordDbRow != nil {
+	if err == nil && wordDbRow != nil {
 		h.errorResponse(w, http.StatusConflict, "Word already exists")
 		return
 	}
@@ -68,6 +68,7 @@ func (h *WordHTTPHandler) AddWordHandler(w http.ResponseWriter, r *http.Request)
 	}
 
 	w.Header().Set("Content-Type", "application/json")
+
 	w.WriteHeader(http.StatusCreated)
 	err = json.NewEncoder(w).Encode(newWord)
 	if err != nil {

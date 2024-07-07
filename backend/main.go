@@ -6,6 +6,7 @@ import (
 
 	"github.com/lwears/word-synonyms/internal/database"
 	"github.com/lwears/word-synonyms/internal/words"
+	"github.com/rs/cors"
 )
 
 func main() {
@@ -21,8 +22,9 @@ func main() {
 	wordManager := words.NewWordsHTTPHandler(*wordService)
 
 	mux := makeMux(wordManager)
+	handler := cors.Default().Handler(mux)
 	fmt.Println("Listening for requests...")
-	http.ListenAndServe(":8090", mux)
+	http.ListenAndServe(":8090", handler)
 }
 
 func makeMux(m *words.WordHTTPHandler) *http.ServeMux {
