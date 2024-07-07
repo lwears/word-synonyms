@@ -21,8 +21,8 @@ CREATE TABLE IF NOT EXISTS Synonyms (
 		FOREIGN KEY (synonym_id) REFERENCES Words(id)
 );
 
-CREATE INDEX idx_synonyms_word_id ON Synonyms(word_id);
-CREATE INDEX idx_synonyms_synonym_id ON Synonyms(synonym_id);
+CREATE INDEX IF NOT EXISTS idx_synonyms_word_id ON Synonyms(word_id);
+CREATE INDEX IF NOT EXISTS idx_synonyms_synonym_id ON Synonyms(synonym_id);
 `
 
 func ConnectAndInitDB(dbPath string) (*sql.DB, error) {
