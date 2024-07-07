@@ -31,6 +31,11 @@ cd frontend
 pnpm run dev
 ```
 
+## :clipboard: Todos
+
+- Database Transactions
+- Check Synonym exists before adding or handle Constraint error accordingly
+
 ## 📚 Resources
 
 Here are some useful resources to help you get started with this project:

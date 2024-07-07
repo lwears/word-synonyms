@@ -4,6 +4,10 @@ import (
 	"encoding/json"
 	"net/http"
 	"regexp"
+	"strings"
+
+	"modernc.org/sqlite"
+	sqlite3 "modernc.org/sqlite/lib"
 )
 
 type WordRequest struct {
@@ -13,13 +17,22 @@ type SynonymRequest struct {
 	Synonym string `json:"synonym"`
 }
 
-type WordResponse struct {
-	ID   int    `json:"id"`
+type AddWordResponse struct {
+	ID   int64  `json:"id"`
 	Word string `json:"word"`
 }
 
+type GetSynonymsResponse struct {
+	Word     string   `json:"word"`
+	Synonyms []string `json:"synonyms"`
+}
+
+type AddSynonymResponse struct {
+	ID int64 `json:"id"`
+}
+
 type WordError struct {
-	StatusCode int    `json:"status_code"`
+	StatusCode int    `json:"statusCode"`
 	Error      string `json:"error"`
 }
 
@@ -54,6 +67,9 @@ func (h *WordHTTPHandler) AddWordHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
+	// Normalize word to lowercase
+	req.Word = strings.ToLower(req.Word)
+
 	// Check word exists
 	wordDbRow, err := h.wordService.GetWord(req.Word)
 	if err == nil && wordDbRow != nil {
@@ -67,10 +83,16 @@ func (h *WordHTTPHandler) AddWordHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
+	// Create the response to ensure keys are lowercase
+	response := AddWordResponse{
+		ID:   newWord.ID,
+		Word: newWord.Word,
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 
 	w.WriteHeader(http.StatusCreated)
-	err = json.NewEncoder(w).Encode(newWord)
+	err = json.NewEncoder(w).Encode(response)
 	if err != nil {
 		h.errorResponse(w, http.StatusInternalServerError, err.Error())
 		return
@@ -79,7 +101,8 @@ func (h *WordHTTPHandler) AddWordHandler(w http.ResponseWriter, r *http.Request)
 
 func (h *WordHTTPHandler) AddSynonymHandler(w http.ResponseWriter, r *http.Request) {
 	var req SynonymRequest
-	word := r.PathValue("word")
+	// Get word and normalise
+	word := strings.ToLower(r.PathValue("word"))
 
 	// Validate word
 	if !isValidWord(word) {
@@ -106,22 +129,39 @@ func (h *WordHTTPHandler) AddSynonymHandler(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	// Check synonym exists and create if not
-	synonymWordDbRow, err := h.wordService.GetOrAddWord(req.Synonym)
+	// Normalise
+	synonym := strings.ToLower(req.Synonym)
+
+	// Check synonym word exists and create if not
+	synonymWordDbRow, err := h.wordService.GetOrAddWord(synonym)
 	if err != nil {
 		h.errorResponse(w, http.StatusConflict, err.Error())
 		return
 	}
 
-	newWord, err := h.wordService.AddSynonym(wordDbRow.ID, synonymWordDbRow.ID)
+	newWordId, err := h.wordService.AddSynonym(wordDbRow.ID, synonymWordDbRow.ID)
 	if err != nil {
+		// This could be done better. Running out of time and need to handle conflict
+		// Also would need to handle all other error codes potentially
+		if err, ok := err.(*sqlite.Error); ok {
+			if err.Code() == sqlite3.SQLITE_CONSTRAINT_PRIMARYKEY {
+				h.errorResponse(w, http.StatusConflict, "Synonym link already exists")
+				return
+			}
+		}
 		h.errorResponse(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
 		return
 	}
 
+	// Create the response to ensure keys are lowercase
+	response := AddSynonymResponse{
+		ID: newWordId,
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	err = json.NewEncoder(w).Encode(newWord)
+
+	err = json.NewEncoder(w).Encode(response)
 	if err != nil {
 		h.errorResponse(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
 		return
@@ -165,8 +205,13 @@ func (h *WordHTTPHandler) GetSynonymsHandler(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
+	response := &GetSynonymsResponse{
+		Word:     synonyms.Word,
+		Synonyms: synonyms.Synonyms,
+	}
+
 	w.Header().Set("Content-Type", "application/json")
-	err = json.NewEncoder(w).Encode(synonyms)
+	err = json.NewEncoder(w).Encode(response)
 	if err != nil {
 		h.errorResponse(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
 		return
