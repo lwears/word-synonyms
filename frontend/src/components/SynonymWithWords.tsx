@@ -19,7 +19,7 @@ const SynonymWithWords: React.FC<WordWithSynonymsProps> = ({
         {words.map((word, index) => (
           <React.Fragment key={index}>
             {index > 0 && ', '}
-            <span key={index} className="text-md text-secondary">
+            <span key={index} className="text-md text-green-300">
               {word}
             </span>
           </React.Fragment>

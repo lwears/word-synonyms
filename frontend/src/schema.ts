@@ -8,7 +8,10 @@ const bothSchema = z.object({
     })
     .trim()
     .min(1, { message: 'word must be minimum 1 character' })
-    .max(45),
+    .max(45)
+    .refine((value) => isNaN(Number(value)), {
+      message: 'value should not be a number',
+    }),
   synonym: z
     .string({
       required_error: 'synonym is required',
@@ -16,7 +19,10 @@ const bothSchema = z.object({
     })
     .trim()
     .min(1, { message: 'synonym must be minimum 1 character' })
-    .max(45),
+    .max(45)
+    .refine((value) => isNaN(Number(value)), {
+      message: 'value should not be a number',
+    }),
 });
 
 const wordOnlySchema = z.object({
@@ -27,7 +33,10 @@ const wordOnlySchema = z.object({
     })
     .trim()
     .min(1, { message: 'word must be minimum 1 character' })
-    .max(45),
+    .max(45)
+    .refine((value) => isNaN(Number(value)), {
+      message: 'value should not be a number',
+    }),
   synonym: z.literal(''),
 });
 
@@ -40,7 +49,10 @@ const synonymOnlySchema = z.object({
     })
     .trim()
     .min(1, { message: 'synonym must be minimum 1 character' })
-    .max(50, { message: 'synonym must be maximum 50 characters' }),
+    .max(50, { message: 'synonym must be maximum 50 characters' })
+    .refine((value) => isNaN(Number(value)), {
+      message: 'value should not be a number',
+    }),
 });
 
 export const schema = z.union([bothSchema, wordOnlySchema, synonymOnlySchema]);
