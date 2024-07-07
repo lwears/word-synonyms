@@ -20,7 +20,7 @@ const Input: React.FC<InputProps> = ({
 }) => (
   <>
     <div className="label">
-      <span className="label-text">{title}</span>
+      <span className="label-text text-primary">{title}</span>
     </div>
     <input
       className={clsx(
