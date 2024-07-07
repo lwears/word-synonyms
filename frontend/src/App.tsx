@@ -137,6 +137,12 @@ function App() {
                 disabled={!watchedword}
               />
               <Button
+                onClick={handleSubmit(handleAddSynonymToWord)}
+                content="Add Synonym to Word"
+                loading={loading}
+                disabled={!watchedSynonym && !watchedword}
+              />
+              <Button
                 content="Get Synonyms"
                 onClick={handleSubmit(handleGetSynonyms)}
                 loading={loading}
@@ -147,12 +153,6 @@ function App() {
                 onClick={handleSubmit(handleGetWordsForSynonym)}
                 loading={loading}
                 disabled={!watchedSynonym}
-              />
-              <Button
-                onClick={handleSubmit(handleAddSynonymToWord)}
-                content="Add Synonym to Word"
-                loading={loading}
-                disabled={!watchedSynonym && !watchedword}
               />
             </div>
           </form>
