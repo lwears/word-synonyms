@@ -17,10 +17,13 @@ CREATE TABLE IF NOT EXISTS Synonyms (
 		word_id INT,
 		synonym_id INT,
 		PRIMARY KEY (word_id, synonym_id),
-		FOREIGN KEY (word_id) REFERENCES Words(word_id),
-		FOREIGN KEY (synonym_id) REFERENCES Words(word_id)
+		FOREIGN KEY (word_id) REFERENCES Words(id),
+		FOREIGN KEY (synonym_id) REFERENCES Words(id)
 );
-		`
+
+CREATE INDEX idx_synonyms_word_id ON Synonyms(word_id);
+CREATE INDEX idx_synonyms_synonym_id ON Synonyms(synonym_id);
+`
 
 func ConnectAndInitDB(dbPath string) (*sql.DB, error) {
 	db, err := sql.Open("sqlite", dbPath)

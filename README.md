@@ -47,6 +47,7 @@ Everything in App.tsx on frontend. Just for simplicity.
 - Backend: Check Synonym exists before adding or handle Constraint error accordingly
 - Frontend: Move URL into env variable
 - Frontend: Disable buttons until valid inputs
+- Setup environment variables
 
 ## Dependencies
 

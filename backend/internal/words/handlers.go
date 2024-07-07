@@ -112,7 +112,7 @@ func (h *WordHTTPHandler) AddSynonymHandler(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	// Get word and normalise
+	// Normalise
 	word = strings.ToLower(word)
 
 	// Check word exists and create if not
@@ -196,6 +196,8 @@ func (h *WordHTTPHandler) GetSynonymsHandler(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
+	word = strings.ToLower(word)
+
 	// Check word exists
 	wordDbRow, err := h.wordService.GetWord(word)
 	if err != nil || wordDbRow == nil {
@@ -229,6 +231,8 @@ func (h *WordHTTPHandler) GetWordsForSynonymHandler(w http.ResponseWriter, r *ht
 		h.errorResponse(w, http.StatusBadRequest, "Invalid synonym value")
 		return
 	}
+
+	synonym = strings.ToLower(synonym)
 
 	// Check word exists
 	wordDbRow, err := h.wordService.GetWord(synonym)
