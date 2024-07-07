@@ -27,6 +27,11 @@ type GetSynonymsResponse struct {
 	Synonyms []string `json:"synonyms"`
 }
 
+type GetWordsForSynonymResponse struct {
+	Synonym string   `json:"synonym"`
+	Words   []string `json:"words"`
+}
+
 type AddSynonymResponse struct {
 	ID int64 `json:"id"`
 }
@@ -89,8 +94,6 @@ func (h *WordHTTPHandler) AddWordHandler(w http.ResponseWriter, r *http.Request)
 		Word: newWord.Word,
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-
 	w.WriteHeader(http.StatusCreated)
 	err = json.NewEncoder(w).Encode(response)
 	if err != nil {
@@ -101,14 +104,16 @@ func (h *WordHTTPHandler) AddWordHandler(w http.ResponseWriter, r *http.Request)
 
 func (h *WordHTTPHandler) AddSynonymHandler(w http.ResponseWriter, r *http.Request) {
 	var req SynonymRequest
-	// Get word and normalise
-	word := strings.ToLower(r.PathValue("word"))
+	word := r.PathValue("word")
 
 	// Validate word
 	if !isValidWord(word) {
 		h.errorResponse(w, http.StatusBadRequest, "Invalid synonym value")
 		return
 	}
+
+	// Get word and normalise
+	word = strings.ToLower(word)
 
 	// Check word exists and create if not
 	wordDbRow, err := h.wordService.GetOrAddWord(word)
@@ -125,7 +130,7 @@ func (h *WordHTTPHandler) AddSynonymHandler(w http.ResponseWriter, r *http.Reque
 
 	// Validate synonym word
 	if !isValidWord(req.Synonym) {
-		h.errorResponse(w, http.StatusBadRequest, "Invalid text field")
+		h.errorResponse(w, http.StatusBadRequest, "Invalid synonym field")
 		return
 	}
 
@@ -158,7 +163,6 @@ func (h *WordHTTPHandler) AddSynonymHandler(w http.ResponseWriter, r *http.Reque
 		ID: newWordId,
 	}
 
-	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 
 	err = json.NewEncoder(w).Encode(response)
@@ -175,7 +179,7 @@ func (h *WordHTTPHandler) GetAllWordsHandler(w http.ResponseWriter, r *http.Requ
 		h.errorResponse(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
 		return
 	}
-	w.Header().Set("Content-Type", "application/json")
+
 	err = json.NewEncoder(w).Encode(words)
 	if err != nil {
 		h.errorResponse(w, http.StatusInternalServerError, err.Error())
@@ -210,7 +214,6 @@ func (h *WordHTTPHandler) GetSynonymsHandler(w http.ResponseWriter, r *http.Requ
 		Synonyms: synonyms.Synonyms,
 	}
 
-	w.Header().Set("Content-Type", "application/json")
 	err = json.NewEncoder(w).Encode(response)
 	if err != nil {
 		h.errorResponse(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
@@ -240,8 +243,12 @@ func (h *WordHTTPHandler) GetWordsForSynonymHandler(w http.ResponseWriter, r *ht
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	err = json.NewEncoder(w).Encode(synonyms)
+	response := &GetWordsForSynonymResponse{
+		Synonym: synonyms.Synonym,
+		Words:   synonyms.Words,
+	}
+
+	err = json.NewEncoder(w).Encode(response)
 	if err != nil {
 		h.errorResponse(w, http.StatusInternalServerError, err.Error())
 		return
@@ -249,7 +256,6 @@ func (h *WordHTTPHandler) GetWordsForSynonymHandler(w http.ResponseWriter, r *ht
 }
 
 func (h *WordHTTPHandler) errorResponse(w http.ResponseWriter, statusCode int, errorString string) {
-	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
 	encodingError := json.NewEncoder(w).Encode(WordError{
 		StatusCode: statusCode,

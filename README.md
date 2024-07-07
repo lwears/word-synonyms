@@ -28,13 +28,26 @@ go run main.go
 
 ```sh
 cd frontend
+pnpm install
 pnpm run dev
 ```
 
+## :notebook: Notes
+
+In case anyone is wondering why I opted for promising changing in the frontend handle functions. Its just a personal prefernce and I find it quite easy to read that way.
+Everything in App.tsx on frontend. Just for simplicity.
+
 ## :clipboard: Todos
 
-- Database Transactions
-- Check Synonym exists before adding or handle Constraint error accordingly
+- Backend: Database Transactions
+- Backend: Check Synonym exists before adding or handle Constraint error accordingly
+- Frontend: Move URL into env variable
+- Frontend: Disable buttons until valid inputs
+
+## Dependencies
+
+- [KY HttpClient](https://github.com/sindresorhus/ky) (I have wanted to try this for a while.)
+- [rs/cors](https://github.com/rs/cors) (I chose this for simplicity, but it would have been nice to implement it myself)
 
 ## 📚 Resources
 
@@ -46,6 +59,7 @@ Here are some useful resources to help you get started with this project:
 - [Github Actions](https://olegk.dev/github-actions-and-go#heading-github-actions)
 - [Alex Edwards Blog](https://www.alexedwards.net/blog/organising-database-access) (Organising DB Access)
 - [Alex Edwards Blog](https://www.alexedwards.net/blog/introduction-to-using-sql-databases-in-go) (SQL Databases in Go)
+- [Alex Edwards Blog](https://www.alexedwards.net/blog/making-and-using-middleware) (EnforceJsonHandler Middleware)
 - [React Hook Form](https://www.freecodecamp.org/news/react-form-validation-zod-react-hook-form/) (React-Hook-Form Validation with Zod)
 - [Resource 4](#)
 
