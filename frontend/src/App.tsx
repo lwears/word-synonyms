@@ -111,6 +111,7 @@ function App() {
           <form>
             <div className="flex flex-col gap-2">
               <Input
+                title="Enter Word"
                 type="text"
                 placeholder="Type word here"
                 name="word"
@@ -120,6 +121,7 @@ function App() {
                 disabled={loading}
               />
               <Input
+                title="Enter Synonym"
                 type="text"
                 placeholder="Type synonym here"
                 name="synonym"

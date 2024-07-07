@@ -26,10 +26,14 @@ go run main.go
 
 ### Run Frontend
 
-```sh
+```bash
 cd frontend
 pnpm install
 pnpm run dev
+
+#OR
+npm install
+npm run dev
 ```
 
 ## :notebook: Notes

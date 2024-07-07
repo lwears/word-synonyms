@@ -7,6 +7,7 @@ interface InputProps extends React.ComponentProps<'input'> {
   register: UseFormRegister<FormData>;
   error: FieldError | undefined;
   name: 'synonym' | 'word';
+  title: string;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -15,10 +16,11 @@ const Input: React.FC<InputProps> = ({
   name,
   register,
   error,
+  title,
 }) => (
   <>
     <div className="label">
-      <span className="label-text">Enter Word</span>
+      <span className="label-text">{title}</span>
     </div>
     <input
       className={clsx(
