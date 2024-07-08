@@ -47,8 +47,17 @@ Browse to http://localhost:5173
 
 ## Dependencies
 
-- [KY HttpClient](https://github.com/sindresorhus/ky) (I have wanted to try this for a while.)
+### Backend
+
 - [rs/cors](https://github.com/rs/cors) (I chose this for simplicity, but it would have been nice to implement it myself)
+
+### Frontend
+
+- [KY HttpClient](https://github.com/sindresorhus/ky) (I have wanted to try this for a while.)
+- [Sonner](https://sonner.emilkowal.ski/) (Toasts)
+- [Zod](https://zod.dev/) (Schema Validation)
+- [React Hook form](https://www.react-hook-form.com/) (Form Library)
+- [Tailwind CSS](https://tailwindcss.com/)(CSS utility classes)
 
 ## 📚 Resources
 

@@ -11,6 +11,7 @@ import Loading from './components/Loading';
 import Button from './components/Button';
 import Input from './components/Input';
 import { schema } from './schema';
+import { handleHttpError } from './helpers';
 
 import type {
   GetSynonymsResponse,
@@ -19,7 +20,8 @@ import type {
   AddSynonymResponse,
   FormData,
 } from './types';
-import { handleHttpError } from './helpers';
+
+const BASE_URL = 'http://localhost:8090';
 
 function App() {
   const [synonyms, setSynonyms] = useState<GetSynonymsResponse | null>(null);
@@ -50,7 +52,7 @@ function App() {
   const handleAddWord = (data: FormData) => {
     setLoading(true);
     return ky
-      .post('http://localhost:8090/word', { json: data })
+      .post(`${BASE_URL}/word`, { json: data })
       .json<AddWordResponse>()
       .then((d) => {
         reset();
@@ -63,7 +65,7 @@ function App() {
   const handleAddSynonymToWord = ({ synonym, word }: FormData) => {
     setLoading(true);
     return ky
-      .post(`http://localhost:8090/synonym/${word}`, { json: { synonym } })
+      .post(`${BASE_URL}/synonym/${word}`, { json: { synonym } })
       .json<AddSynonymResponse>()
       .then(() => {
         reset();
@@ -80,7 +82,7 @@ function App() {
   const handleGetSynonyms = (data: { word: string }) => {
     setLoading(true);
     return ky
-      .get(`http://localhost:8090/synonyms/${data.word}`)
+      .get(`${BASE_URL}/synonyms/${data.word}`)
       .json<GetSynonymsResponse>()
       .then((d) => {
         reset();
@@ -93,7 +95,7 @@ function App() {
   const handleGetWordsForSynonym = (data: { synonym: string }) => {
     setLoading(true);
     return ky
-      .get(`http://localhost:8090/words/${data.synonym}`)
+      .get(`${BASE_URL}/words/${data.synonym}`)
       .json<GetWordsForSynonymResponse>()
       .then((d) => {
         reset();
