@@ -38,11 +38,6 @@ npm run dev
 
 Browse to http://localhost:5173
 
-## :notebook: Notes
-
-In case anyone is wondering why I opted for promising changing in the frontend handle functions. Its just a personal prefernce and I find it quite easy to read that way.
-Everything in App.tsx on frontend. Just for speed.
-
 ## :clipboard: Todos
 
 - Backend: Database Transactions
