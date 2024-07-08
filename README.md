@@ -36,18 +36,19 @@ npm install
 npm run dev
 ```
 
+Browse to http://localhost:5173
+
 ## :notebook: Notes
 
 In case anyone is wondering why I opted for promising changing in the frontend handle functions. Its just a personal prefernce and I find it quite easy to read that way.
-Everything in App.tsx on frontend. Just for simplicity.
+Everything in App.tsx on frontend. Just for speed.
 
 ## :clipboard: Todos
 
 - Backend: Database Transactions
-- Backend: Check Synonym exists before adding or handle Constraint error accordingly
 - Frontend: Move URL into env variable
-- Frontend: Disable buttons until valid inputs
-- Setup environment variables
+- Eslint & Prettier Github workflow
+- [OpenApi TypeScript](https://github.com/openapi-ts/openapi-typescript) (OpenApi TypeScript & Fetch)
 
 ## Dependencies
 
