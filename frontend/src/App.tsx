@@ -142,7 +142,7 @@ function App() {
                 onClick={handleSubmit(handleAddSynonymToWord)}
                 content="Add Synonym to Word"
                 loading={loading}
-                disabled={!watchedSynonym && !watchedword}
+                disabled={!watchedSynonym || !watchedword}
               />
               <Button
                 content="Get Synonyms"

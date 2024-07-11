@@ -44,6 +44,7 @@ Browse to http://localhost:5173
 - Frontend: Move URL into env variable
 - Eslint & Prettier Github workflow
 - [OpenApi TypeScript](https://github.com/openapi-ts/openapi-typescript) (OpenApi TypeScript & Fetch)
+- Validator in struct tags
 
 ## Dependencies
 
