@@ -15,8 +15,8 @@ jobs:
         with:
           node-version: 16
 
-      - run: cd frontend && npm ci
-      - run: cd frontend && npx prettier --write .
+      - run: cd frontend && pnpm install --frozen-lockfile
+      - run: cd frontend && pnpx prettier --write .
 
       - uses: autofix-ci/action@dd55f44df8f7cdb7a6bf74c78677eb8acd40cd0a
   autofix_go:
