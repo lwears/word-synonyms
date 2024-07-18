@@ -1,41 +1,41 @@
 name: autofix.ci
-'on':
-  pull_request: null
+on:
+  pull_request:
   push:
-    branches:
-      - main
+    branches: ['main']
 permissions:
   contents: read
+
 jobs:
   autofix:
-    build: null
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version:
-          - 20
     steps:
       - uses: actions/checkout@v4
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+      - uses: pnpm/action-setup@v4
         with:
           version: 9
-      - name: 'Use Node.js ${{ matrix.node-version }}'
-        uses: actions/setup-node@v4
         with:
-          node-version: '${{ matrix.node-version }}'
+          node-version: 20
           cache: pnpm
+
       - run: cd frontend && pnpm install --frozen-lockfile
       - run: cd frontend && pnpx prettier --write .
-      - uses: autofix-ci/action@dd55f44df8f7cdb7a6bf74c78677eb8acd40cd0a
 
+      - uses: autofix-ci/action@dd55f44df8f7cdb7a6bf74c78677eb8acd40cd0a
   autofix_go:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with:
-          go-version: 1.22.5
+          go-version: '1.22.5'
+
+      # goimports works like gofmt, but also fixes imports.
+      # see https://pkg.go.dev/golang.org/x/tools/cmd/goimports
       - run: cd backend && go install golang.org/x/tools/cmd/goimports@latest
       - run: cd backend goimports -w .
+      # of course we can also do just this instead:
+      # - run: gofmt -w .
+
       - uses: autofix-ci/action@dd55f44df8f7cdb7a6bf74c78677eb8acd40cd0a
