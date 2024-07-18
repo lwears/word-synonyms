@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod'
 
 const bothSchema = z.object({
   word: z
@@ -25,7 +25,7 @@ const bothSchema = z.object({
     .refine((value) => isNaN(Number(value)), {
       message: 'value should not be a number',
     }),
-});
+})
 
 const wordOnlySchema = z.object({
   word: z
@@ -41,7 +41,7 @@ const wordOnlySchema = z.object({
       message: 'value should not be a number',
     }),
   synonym: z.literal(''),
-});
+})
 
 const synonymOnlySchema = z.object({
   word: z.literal(''),
@@ -57,6 +57,6 @@ const synonymOnlySchema = z.object({
     .refine((value) => isNaN(Number(value)), {
       message: 'value should not be a number',
     }),
-});
+})
 
-export const schema = z.union([bothSchema, wordOnlySchema, synonymOnlySchema]);
+export const schema = z.union([bothSchema, wordOnlySchema, synonymOnlySchema])

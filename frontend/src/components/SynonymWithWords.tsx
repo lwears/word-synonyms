@@ -1,8 +1,8 @@
-import React from 'react';
+import React from 'react'
 
 interface WordWithSynonymsProps {
-  synonym: string;
-  words: string[];
+  synonym: string
+  words: string[]
 }
 
 const SynonymWithWords: React.FC<WordWithSynonymsProps> = ({
@@ -23,7 +23,7 @@ const SynonymWithWords: React.FC<WordWithSynonymsProps> = ({
         <p className="text-white">&nbsp;{']'}</p>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default SynonymWithWords;
+export default SynonymWithWords

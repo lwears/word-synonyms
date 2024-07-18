@@ -1,13 +1,13 @@
-import clsx from 'clsx';
+import clsx from 'clsx'
 
-import type { UseFormRegister, FieldError } from 'react-hook-form';
-import type { FormData } from '../types';
+import type { UseFormRegister, FieldError } from 'react-hook-form'
+import type { FormData } from '../types'
 
 interface InputProps extends React.ComponentProps<'input'> {
-  register: UseFormRegister<FormData>;
-  error: FieldError | undefined;
-  name: 'synonym' | 'word';
-  title: string;
+  register: UseFormRegister<FormData>
+  error: FieldError | undefined
+  name: 'synonym' | 'word'
+  title: string
 }
 
 const Input: React.FC<InputProps> = ({
@@ -37,8 +37,8 @@ const Input: React.FC<InputProps> = ({
       </div>
     )}
   </>
-);
-export default Input;
+)
+export default Input
 
 {
   /* <label className="form-control w-full max-w-xs">

@@ -23,4 +23,4 @@ module.exports = {
     'unicorn/numeric-separators-style': 'off',
     'unicorn/no-null': 'off',
   },
-};
+}

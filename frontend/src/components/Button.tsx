@@ -1,5 +1,5 @@
 interface ButtonProps extends React.ComponentProps<'button'> {
-  loading: boolean;
+  loading: boolean
 }
 
 const Button = ({ content, loading, ...props }: ButtonProps) => (
@@ -9,6 +9,6 @@ const Button = ({ content, loading, ...props }: ButtonProps) => (
   >
     {loading ? <span className="loading loading-spinner"></span> : content}
   </button>
-);
+)
 
-export default Button;
+export default Button
