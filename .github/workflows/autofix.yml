@@ -18,6 +18,7 @@ jobs:
         with:
           node-version: 18
           cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.json
 
       - run: cd frontend && pnpm install --frozen-lockfile
       - run: cd frontend && pnpx prettier --write . --config .prettierrc
@@ -30,6 +31,7 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: '1.22.5'
+          cache-dependency-path: 'backend/go.sum'
 
       # goimports works like gofmt, but also fixes imports.
       # see https://pkg.go.dev/golang.org/x/tools/cmd/goimports
