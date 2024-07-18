@@ -1,17 +1,17 @@
-import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { Toaster } from 'sonner';
-import { toast } from 'sonner';
-import { zodResolver } from '@hookform/resolvers/zod';
-import ky from 'ky';
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { Toaster } from "sonner";
+import { toast } from "sonner";
+import { zodResolver } from "@hookform/resolvers/zod";
+import ky from "ky";
 
-import WordWithSynonyms from './components/WordWithSynonyms';
-import SynonymWithWords from './components/SynonymWithWords';
-import Loading from './components/Loading';
-import Button from './components/Button';
-import Input from './components/Input';
-import { schema } from './schema';
-import { handleHttpError } from './helpers';
+import WordWithSynonyms from "./components/WordWithSynonyms";
+import SynonymWithWords from "./components/SynonymWithWords";
+import Loading from "./components/Loading";
+import Button from "./components/Button";
+import Input from "./components/Input";
+import { schema } from "./schema";
+import { handleHttpError } from "./helpers";
 
 import type {
   GetSynonymsResponse,
@@ -19,9 +19,9 @@ import type {
   AddWordResponse,
   AddSynonymResponse,
   FormData,
-} from './types';
+} from "./types";
 
-const BASE_URL = 'http://localhost:8090';
+const BASE_URL = "http://localhost:8090";
 
 function App() {
   const [synonyms, setSynonyms] = useState<GetSynonymsResponse | null>(null);
@@ -46,8 +46,8 @@ function App() {
     }
   }, [loading]);
 
-  const watchedSynonym = watch('synonym');
-  const watchedword = watch('word');
+  const watchedSynonym = watch("synonym");
+  const watchedword = watch("word");
 
   const handleAddWord = (data: FormData) => {
     setLoading(true);
@@ -56,7 +56,7 @@ function App() {
       .json<AddWordResponse>()
       .then((d) => {
         reset();
-        toast.success('Word Added', { description: d.word });
+        toast.success("Word Added", { description: d.word });
       })
       .catch((err) => handleHttpError(err, `Error Adding Word: ${data.word}`))
       .finally(() => setLoading(false));
@@ -74,7 +74,7 @@ function App() {
         });
       })
       .catch((err) =>
-        handleHttpError(err, `Error adding synonym to word: ${word}`)
+        handleHttpError(err, `Error adding synonym to word: ${word}`),
       )
       .finally(() => setLoading(false));
   };

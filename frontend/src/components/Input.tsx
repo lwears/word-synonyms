@@ -1,12 +1,12 @@
-import clsx from 'clsx';
+import clsx from "clsx";
 
-import type { UseFormRegister, FieldError } from 'react-hook-form';
-import type { FormData } from '../types';
+import type { UseFormRegister, FieldError } from "react-hook-form";
+import type { FormData } from "../types";
 
-interface InputProps extends React.ComponentProps<'input'> {
+interface InputProps extends React.ComponentProps<"input"> {
   register: UseFormRegister<FormData>;
   error: FieldError | undefined;
-  name: 'synonym' | 'word';
+  name: "synonym" | "word";
   title: string;
 }
 
@@ -24,8 +24,8 @@ const Input: React.FC<InputProps> = ({
     </div>
     <input
       className={clsx(
-        'input input-bordered w-full max-w-xs',
-        error && 'input-error'
+        "input input-bordered w-full max-w-xs",
+        error && "input-error",
       )}
       type={type}
       placeholder={placeholder}

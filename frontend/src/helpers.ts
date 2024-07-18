@@ -1,6 +1,6 @@
-import { toast } from 'sonner';
+import { toast } from "sonner";
 
-import type { HTTPError } from 'ky';
+import type { HTTPError } from "ky";
 
 export const handleHttpError = (err: HTTPError, text: string) =>
   err.response

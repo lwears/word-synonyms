@@ -1,4 +1,4 @@
-interface ButtonProps extends React.ComponentProps<'button'> {
+interface ButtonProps extends React.ComponentProps<"button"> {
   loading: boolean;
 }
 
