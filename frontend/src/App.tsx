@@ -58,7 +58,7 @@ function App() {
         reset()
         toast.success('Word Added', { description: d.word })
       })
-      .catch((err) => handleHttpError(err, `Error Adding Word: ${data.word}`))
+      .catch((error) => handleHttpError(error, `Error Adding Word: ${data.word}`))
       .finally(() => setLoading(false))
   }
 
@@ -73,8 +73,8 @@ function App() {
           description: `synonym: ${synonym}`,
         })
       })
-      .catch((err) =>
-        handleHttpError(err, `Error adding synonym to word: ${word}`)
+      .catch((error) =>
+        handleHttpError(error, `Error adding synonym to word: ${word}`)
       )
       .finally(() => setLoading(false))
   }
@@ -88,7 +88,7 @@ function App() {
         reset()
         setSynonyms(d)
       })
-      .catch((err) => handleHttpError(err, `Error fetching synonyms`))
+      .catch((error) => handleHttpError(error, `Error fetching synonyms`))
       .finally(() => setLoading(false))
   }
 
@@ -101,7 +101,7 @@ function App() {
         reset()
         setSynonymWithWords(d)
       })
-      .catch((err) => handleHttpError(err, `Error fetching words for synonyms`))
+      .catch((error) => handleHttpError(error, `Error fetching words for synonyms`))
       .finally(() => setLoading(false))
   }
 

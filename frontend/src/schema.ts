@@ -10,7 +10,7 @@ const bothSchema = z.object({
     .trim()
     .min(1, { message: 'word must be minimum 1 character' })
     .max(45)
-    .refine((value) => isNaN(Number(value)), {
+    .refine((value) => Number.isNaN(Number(value)), {
       message: 'value should not be a number',
     }),
   synonym: z
@@ -22,7 +22,7 @@ const bothSchema = z.object({
     .trim()
     .min(1, { message: 'synonym must be minimum 1 character' })
     .max(45)
-    .refine((value) => isNaN(Number(value)), {
+    .refine((value) => Number.isNaN(Number(value)), {
       message: 'value should not be a number',
     }),
 })
@@ -37,7 +37,7 @@ const wordOnlySchema = z.object({
     .trim()
     .min(1, { message: 'word must be minimum 1 character' })
     .max(45)
-    .refine((value) => isNaN(Number(value)), {
+    .refine((value) => Number.isNaN(Number(value)), {
       message: 'value should not be a number',
     }),
   synonym: z.literal(''),
@@ -54,7 +54,7 @@ const synonymOnlySchema = z.object({
     .trim()
     .min(1, { message: 'synonym must be minimum 1 character' })
     .max(50, { message: 'synonym must be maximum 50 characters' })
-    .refine((value) => isNaN(Number(value)), {
+    .refine((value) => Number.isNaN(Number(value)), {
       message: 'value should not be a number',
     }),
 })
