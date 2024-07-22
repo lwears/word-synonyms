@@ -1,3 +1,15 @@
-# frontend/.husky/pre-commit
+#!/bin/sh
+
+# Run trufflehog and capture its exit code
+trufflehog git file://. --no-update --only-verified --fail
+TH_EXIT_CODE=$?
+
+# If trufflehog failed, exit with its exit code
+if [ $TH_EXIT_CODE -ne 0 ]; then
+    echo "truffleHog found issues. Aborting commit."
+    exit $TH_EXIT_CODE
+fi
+
+# Change directory to frontend and run lint-staged
 cd frontend
 pnpx lint-staged

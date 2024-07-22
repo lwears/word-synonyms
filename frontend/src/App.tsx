@@ -5,6 +5,7 @@ import { toast } from 'sonner'
 import { zodResolver } from '@hookform/resolvers/zod'
 import ky from 'ky'
 
+import env from './env'
 import WordWithSynonyms from './components/WordWithSynonyms'
 import SynonymWithWords from './components/SynonymWithWords'
 import Loading from './components/Loading'
@@ -20,8 +21,6 @@ import type {
   AddSynonymResponse,
   FormData,
 } from './types'
-
-const BASE_URL = 'http://localhost:8090'
 
 function App() {
   const [synonyms, setSynonyms] = useState<GetSynonymsResponse | null>(null)
@@ -52,7 +51,7 @@ function App() {
   const handleAddWord = (data: FormData) => {
     setLoading(true)
     return ky
-      .post(`${BASE_URL}/word`, { json: data })
+      .post(`${env.VITE_BASE_URI}/word`, { json: data })
       .json<AddWordResponse>()
       .then((d) => {
         reset()
@@ -67,7 +66,7 @@ function App() {
   const handleAddSynonymToWord = ({ synonym, word }: FormData) => {
     setLoading(true)
     return ky
-      .post(`${BASE_URL}/synonym/${word}`, { json: { synonym } })
+      .post(`${env.VITE_BASE_URI}/synonym/${word}`, { json: { synonym } })
       .json<AddSynonymResponse>()
       .then(() => {
         reset()
@@ -84,7 +83,7 @@ function App() {
   const handleGetSynonyms = (data: { word: string }) => {
     setLoading(true)
     return ky
-      .get(`${BASE_URL}/synonyms/${data.word}`)
+      .get(`${env.VITE_BASE_URI}/synonyms/${data.word}`)
       .json<GetSynonymsResponse>()
       .then((d) => {
         reset()
@@ -97,7 +96,7 @@ function App() {
   const handleGetWordsForSynonym = (data: { synonym: string }) => {
     setLoading(true)
     return ky
-      .get(`${BASE_URL}/words/${data.synonym}`)
+      .get(`${env.VITE_BASE_URI}/words/${data.synonym}`)
       .json<GetWordsForSynonymResponse>()
       .then((d) => {
         reset()

@@ -41,12 +41,9 @@ Browse to http://localhost:5173
 ## :clipboard: Todos
 
 - Backend: Database Transactions
-- Frontend: Move URL into env variable
-- Eslint & Prettier Github workflow
 - [OpenApi TypeScript](https://github.com/openapi-ts/openapi-typescript) (OpenApi TypeScript & Fetch)
 - [Validator](https://github.com/go-playground/validator) Validator in struct tags - Go Playground Validator
 - Update Github Action to use github token to avoid unique cloners
-- Trufflehog
 
 ## Dependencies
 
