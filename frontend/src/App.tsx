@@ -58,7 +58,9 @@ function App() {
         reset()
         toast.success('Word Added', { description: d.word })
       })
-      .catch((error) => handleHttpError(error, `Error Adding Word: ${data.word}`))
+      .catch((error) =>
+        handleHttpError(error, `Error Adding Word: ${data.word}`)
+      )
       .finally(() => setLoading(false))
   }
 
@@ -101,7 +103,9 @@ function App() {
         reset()
         setSynonymWithWords(d)
       })
-      .catch((error) => handleHttpError(error, `Error fetching words for synonyms`))
+      .catch((error) =>
+        handleHttpError(error, `Error fetching words for synonyms`)
+      )
       .finally(() => setLoading(false))
   }
 
@@ -159,7 +163,7 @@ function App() {
             </div>
           </form>
         </div>
-        <div className="flex border border-primary rounded flex-1 p-4 justify-center max-w-[500px]">
+        <div className="flex border border-primary rounded-lg flex-1 p-4 justify-center max-w-[500px]">
           {loading && <Loading />}
           {synonymWithWords && <SynonymWithWords {...synonymWithWords} />}
           {synonyms && <WordWithSynonyms {...synonyms} />}
