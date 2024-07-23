@@ -43,7 +43,7 @@ Browse to http://localhost:5173
 - Backend: Database Transactions
 - [OpenApi TypeScript](https://github.com/openapi-ts/openapi-typescript) (OpenApi TypeScript & Fetch)
 - [Validator](https://github.com/go-playground/validator) Validator in struct tags - Go Playground Validator
-- Update Github Action to use github token to avoid unique cloners
+- Update Github Action to use github token to avoid unique cloners - testing this
 
 ## Dependencies
 
