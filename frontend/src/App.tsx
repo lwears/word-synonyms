@@ -1,25 +1,21 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { Toaster } from 'sonner'
-import { toast } from 'sonner'
-import { zodResolver } from '@hookform/resolvers/zod'
-import ky from 'ky'
+import { Toaster, toast } from 'sonner'
 
-import env from './env'
-import WordWithSynonyms from './components/WordWithSynonyms'
-import SynonymWithWords from './components/SynonymWithWords'
-import Loading from './components/Loading'
 import Button from './components/Button'
 import Input from './components/Input'
-import { schema } from './schema'
+import Loading from './components/Loading'
+import SynonymWithWords from './components/SynonymWithWords'
+import WordWithSynonyms from './components/WordWithSynonyms'
 import { handleHttpError } from './helpers'
+import { schema } from './schema'
 
+import { api } from './api'
 import type {
+  FormData,
   GetSynonymsResponse,
   GetWordsForSynonymResponse,
-  AddWordResponse,
-  AddSynonymResponse,
-  FormData,
 } from './types'
 
 function App() {
@@ -50,9 +46,8 @@ function App() {
 
   const handleAddWord = (data: FormData) => {
     setLoading(true)
-    return ky
-      .post(`${env.VITE_BASE_URI}/word`, { json: data })
-      .json<AddWordResponse>()
+    api
+      .addWord(data)
       .then((d) => {
         reset()
         toast.success('Word Added', { description: d.word })
@@ -60,14 +55,15 @@ function App() {
       .catch((error) =>
         handleHttpError(error, `Error Adding Word: ${data.word}`)
       )
-      .finally(() => setLoading(false))
+      .finally(() => {
+        setLoading(false)
+      })
   }
 
   const handleAddSynonymToWord = ({ synonym, word }: FormData) => {
     setLoading(true)
-    return ky
-      .post(`${env.VITE_BASE_URI}/synonym/${word}`, { json: { synonym } })
-      .json<AddSynonymResponse>()
+    api
+      .addSynonymToWord({ synonym, word })
       .then(() => {
         reset()
         toast.success(`Synonym added to ${word}`, {
@@ -77,27 +73,29 @@ function App() {
       .catch((error) =>
         handleHttpError(error, `Error adding synonym to word: ${word}`)
       )
-      .finally(() => setLoading(false))
+      .finally(() => {
+        setLoading(false)
+      })
   }
 
   const handleGetSynonyms = (data: { word: string }) => {
     setLoading(true)
-    return ky
-      .get(`${env.VITE_BASE_URI}/synonyms/${data.word}`)
-      .json<GetSynonymsResponse>()
+    api
+      .getSynonyms(data.word)
       .then((d) => {
         reset()
         setSynonyms(d)
       })
       .catch((error) => handleHttpError(error, `Error fetching synonyms`))
-      .finally(() => setLoading(false))
+      .finally(() => {
+        setLoading(false)
+      })
   }
 
   const handleGetWordsForSynonym = (data: { synonym: string }) => {
     setLoading(true)
-    return ky
-      .get(`${env.VITE_BASE_URI}/words/${data.synonym}`)
-      .json<GetWordsForSynonymResponse>()
+    api
+      .getWordsForSynonym(data.synonym)
       .then((d) => {
         reset()
         setSynonymWithWords(d)
@@ -105,7 +103,9 @@ function App() {
       .catch((error) =>
         handleHttpError(error, `Error fetching words for synonyms`)
       )
-      .finally(() => setLoading(false))
+      .finally(() => {
+        setLoading(false)
+      })
   }
 
   return (
