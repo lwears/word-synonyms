@@ -30,13 +30,15 @@ export const Form = () => {
   const watchedSynonym = watch('synonym')
   const watchedword = watch('word')
 
+  const handleSuccess = (message: string, description: string) => {
+    reset()
+    toast.success(message, { description })
+    queryClient.resetQueries()
+  }
+
   const mutateAddWord = useMutation({
     mutationFn: api.addWord,
-    onSuccess: (d) => {
-      reset()
-      toast.success('Word Added', { description: d.word })
-      queryClient.resetQueries()
-    },
+    onSuccess: (d) => handleSuccess('Word Added', d.word),
     onError: (error, data) => {
       toast.error(`Error Adding Word: ${data.word}`, {
         description: error.message,
@@ -46,11 +48,8 @@ export const Form = () => {
 
   const mutateAddSynonym = useMutation({
     mutationFn: api.addSynonymToWord,
-    onSuccess: (res, data) => {
-      reset()
-      toast.success(`Synonym added to ${data.word}`, { description: res.id })
-      queryClient.resetQueries()
-    },
+    onSuccess: (res, data) =>
+      handleSuccess(`Synonym added to ${data.word}`, String(res.id)),
     onError: (error, data) => {
       toast.error(`Error Adding Synonym: ${data.synonym}`, {
         description: error.message,
