@@ -5,7 +5,7 @@ interface WordWithSynonymsProps {
   words: string[]
 }
 
-const SynonymWithWords: React.FC<WordWithSynonymsProps> = ({
+export const SynonymWithWords: React.FC<WordWithSynonymsProps> = ({
   words,
   synonym,
 }) => {
@@ -25,5 +25,3 @@ const SynonymWithWords: React.FC<WordWithSynonymsProps> = ({
     </div>
   )
 }
-
-export default SynonymWithWords

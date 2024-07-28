@@ -10,7 +10,7 @@ interface InputProps extends React.ComponentProps<'input'> {
   title: string
 }
 
-const Input: React.FC<InputProps> = ({
+export const Input: React.FC<InputProps> = ({
   type,
   placeholder,
   name,
@@ -38,29 +38,3 @@ const Input: React.FC<InputProps> = ({
     )}
   </>
 )
-export default Input
-
-{
-  /* <label className="form-control w-full max-w-xs">
-  <div className="label">
-    <span className="label-text">Enter Word</span>
-  </div>
-  <input
-    id="word"
-    type="text"
-    placeholder="Type word here"
-    className={clsx(
-      'input input-bordered w-full max-w-xs',
-      errors.word && 'input-error'
-    )}
-    required
-    disabled={loading}
-    {...register('word')}
-  />
-  {errors.word && (
-    <div className="label">
-      <span className="label-text-alt text-error">{errors.word.message}</span>
-    </div>
-  )}
-</label>; */
-}
