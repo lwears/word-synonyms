@@ -2,25 +2,30 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"mime"
 	"net/http"
+	"os"
 
+	"github.com/joho/godotenv"
 	"github.com/lwears/word-synonyms/internal/database"
 	"github.com/lwears/word-synonyms/internal/words"
 	"github.com/rs/cors"
 )
 
 func main() {
-	// This should be passed in via env, but for the sake of simplicity ill add it here
-	dbPath := "app.db"
+	if err := godotenv.Load(); err != nil {
+		fmt.Println(err)
+	}
+	dbPath := os.Getenv("DB_PATH")
 	database, err := database.ConnectAndInitDB(dbPath)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	defer database.Close()
 
 	wordsService := words.NewWordsService(database)
-	wordsHandler := words.NewWordsHTTPHandler(*wordsService)
+	wordsHandler := words.NewWordsHTTPHandler(wordsService)
 
 	apiHandler := http.StripPrefix("/api", wordsHandler)
 

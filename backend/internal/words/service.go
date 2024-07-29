@@ -33,8 +33,8 @@ type GetSynonymsResult struct {
 	Word      string
 }
 
-func NewWordsService(DB *sql.DB) *WordsService {
-	return &WordsService{
+func NewWordsService(DB *sql.DB) WordsService {
+	return WordsService{
 		DB: DB,
 	}
 }
