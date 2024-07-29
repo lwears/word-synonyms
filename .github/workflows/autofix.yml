@@ -7,7 +7,7 @@ permissions:
   contents: read
 
 jobs:
-  autofix:
+  frontend_lint_fix:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -27,7 +27,7 @@ jobs:
       - run: cd frontend && pnpx eslint . --fix
 
       - uses: autofix-ci/action@dd55f44df8f7cdb7a6bf74c78677eb8acd40cd0a
-  autofix_go:
+  backend_format_fix:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -38,9 +38,23 @@ jobs:
           go-version: '1.22.5'
           cache-dependency-path: 'backend/go.sum'
 
-      # goimports works like gofmt, but also fixes imports.
-      # see https://pkg.go.dev/golang.org/x/tools/cmd/goimports
       - run: cd backend && go install mvdan.cc/gofumpt@latest
       - run: cd backend && gofumpt -l -w . && git diff --exit-code
 
       - uses: autofix-ci/action@dd55f44df8f7cdb7a6bf74c78677eb8acd40cd0a
+  backend_vet_test:
+    runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+          with:
+            token: ${{ secrets.GITHUB_TOKEN }}
+        - uses: actions/setup-go@v5
+          with:
+            go-version: '1.22.5'
+            cache-dependency-path: 'backend/go.sum'
+            
+        - name: Go Vet
+          run: cd backend && go vet ./...
+
+        - name: Test
+          run: cd backend && go test -v ./...
