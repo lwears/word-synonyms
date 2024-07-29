@@ -14,7 +14,7 @@ export default [
   {
     ignores: [
       '**/dist',
-      '**/eslintrc_old.cjs',
+      '**/eslint_old.cjs',
       '**/postcss.config.js',
       '**/vite-env.d.ts',
     ],
