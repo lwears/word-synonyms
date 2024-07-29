@@ -40,7 +40,7 @@ jobs:
 
       # goimports works like gofmt, but also fixes imports.
       # see https://pkg.go.dev/golang.org/x/tools/cmd/goimports
-      - run: cd backend && go install golang.org/x/tools/cmd/goimports@latest
-      - run: cd backend && goimports -w .
+      - run: cd backend && go install mvdan.cc/gofumpt@latest
+      - run: cd backend && gofumpt -l -w . && git diff --exit-code
 
       - uses: autofix-ci/action@dd55f44df8f7cdb7a6bf74c78677eb8acd40cd0a
