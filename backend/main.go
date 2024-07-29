@@ -2,42 +2,36 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"mime"
 	"net/http"
+	"os"
 
+	"github.com/joho/godotenv"
 	"github.com/lwears/word-synonyms/internal/database"
 	"github.com/lwears/word-synonyms/internal/words"
 	"github.com/rs/cors"
 )
 
 func main() {
-	// This should be passed in via env, but for the sake of simplicity ill add it here
-	dbPath := "app.db"
+	if err := godotenv.Load(); err != nil {
+		fmt.Println(err)
+	}
+	dbPath := os.Getenv("DB_PATH")
 	database, err := database.ConnectAndInitDB(dbPath)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	defer database.Close()
 
-	wordService := words.NewWordService(database)
-	wordManager := words.NewWordsHTTPHandler(*wordService)
+	wordsService := words.NewWordsService(database)
+	wordsHandler := words.NewWordsHTTPHandler(wordsService)
 
-	mux := makeMux(wordManager)
-	handler := cors.Default().Handler(mux)
+	apiHandler := http.StripPrefix("/api", wordsHandler)
+
+	handler := cors.Default().Handler(apiHandler)
 	fmt.Println("Listening for requests...")
 	http.ListenAndServe(":8090", enforceJSONHandler(handler))
-}
-
-func makeMux(m *words.WordHTTPHandler) *http.ServeMux {
-	mux := http.NewServeMux()
-	mux.HandleFunc("POST /word", m.AddWordHandler)
-	mux.HandleFunc("GET /words", m.GetAllWordsHandler)
-	mux.HandleFunc("GET /words/{synonym}", m.GetWordsForSynonymHandler)
-
-	mux.HandleFunc("POST /synonym/{word}", m.AddSynonymHandler)
-	mux.HandleFunc("GET /synonyms/{word}", m.GetSynonymsHandler)
-
-	return mux
 }
 
 // https://www.alexedwards.net/blog/making-and-using-middleware

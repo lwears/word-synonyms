@@ -20,7 +20,7 @@ func TestAdd(t *testing.T) {
 	db := setupTestDB(t)
 	defer db.Close()
 
-	wordService := words.NewWordService(db)
+	wordService := words.NewWordsService(db)
 
 	word := "funny"
 	result, err := wordService.AddWord(word)
@@ -50,7 +50,7 @@ func TestGetWord(t *testing.T) {
 	db := setupTestDB(t)
 	defer db.Close()
 
-	wordService := &words.WordService{
+	wordService := &words.WordsService{
 		DB: db,
 	}
 
@@ -72,7 +72,7 @@ func TestAddAndGetSynonym(t *testing.T) {
 	db := setupTestDB(t)
 	defer db.Close()
 
-	wordService := words.NewWordService(db)
+	wordService := words.NewWordsService(db)
 
 	word := "dark"
 	synonym := "shadowy"
@@ -110,7 +110,7 @@ func TestGetWordsForSynonyms(t *testing.T) {
 	db := setupTestDB(t)
 	defer db.Close()
 
-	wordService := words.NewWordService(db)
+	wordService := words.NewWordsService(db)
 
 	word := "dark"
 	synonym := "shadowy"

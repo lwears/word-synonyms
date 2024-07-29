@@ -8,7 +8,7 @@ import (
 	_ "modernc.org/sqlite"
 )
 
-type WordService struct {
+type WordsService struct {
 	DB *sql.DB
 }
 
@@ -33,13 +33,13 @@ type GetSynonymsResult struct {
 	Word      string
 }
 
-func NewWordService(DB *sql.DB) *WordService {
-	return &WordService{
+func NewWordsService(DB *sql.DB) WordsService {
+	return WordsService{
 		DB: DB,
 	}
 }
 
-func (s *WordService) AddWord(word string) (*WordDbRow, error) {
+func (s *WordsService) AddWord(word string) (*WordDbRow, error) {
 	result, err := s.DB.ExecContext(
 		context.Background(),
 		InsertWord, word,
@@ -59,7 +59,7 @@ func (s *WordService) AddWord(word string) (*WordDbRow, error) {
 	}, nil
 }
 
-func (s *WordService) GetAll() ([]string, error) {
+func (s *WordsService) GetAll() ([]string, error) {
 	words := make([]string, 0)
 	rows, err := s.DB.QueryContext(
 		context.Background(),
@@ -82,7 +82,7 @@ func (s *WordService) GetAll() ([]string, error) {
 
 // Want to be able to return nil in event of no rows, instead of an error, for this i need a pointer
 // because i think an empty response is better than an error.
-func (s *WordService) GetWord(word string) (*WordDbRow, error) {
+func (s *WordsService) GetWord(word string) (*WordDbRow, error) {
 	var wordRow WordDbRow
 	row := s.DB.QueryRowContext(
 		context.Background(),
@@ -98,7 +98,7 @@ func (s *WordService) GetWord(word string) (*WordDbRow, error) {
 	return &wordRow, nil
 }
 
-func (s *WordService) GetWordById(id int64) (*WordDbRow, error) {
+func (s *WordsService) GetWordById(id int64) (*WordDbRow, error) {
 	var wordRow WordDbRow
 	row := s.DB.QueryRowContext(
 		context.Background(),
@@ -114,7 +114,7 @@ func (s *WordService) GetWordById(id int64) (*WordDbRow, error) {
 	return &wordRow, nil
 }
 
-func (s *WordService) GetOrAddWord(word string) (*WordDbRow, error) {
+func (s *WordsService) GetOrAddWord(word string) (*WordDbRow, error) {
 	wordRow, err := s.GetWord(word)
 	if err != nil {
 		return nil, err
@@ -128,7 +128,7 @@ func (s *WordService) GetOrAddWord(word string) (*WordDbRow, error) {
 	return wordRow, nil
 }
 
-func (s *WordService) AddSynonym(wordId int64, synonymId int64) (int64, error) {
+func (s *WordsService) AddSynonym(wordId int64, synonymId int64) (int64, error) {
 	result, err := s.DB.ExecContext(
 		context.Background(),
 		InsertSynonym, wordId, synonymId,
@@ -140,7 +140,7 @@ func (s *WordService) AddSynonym(wordId int64, synonymId int64) (int64, error) {
 }
 
 // I got stuck here on whether to check for word existence in either server or handler
-func (s *WordService) GetSynonyms(w *WordDbRow) (Synonyms, error) {
+func (s *WordsService) GetSynonyms(w *WordDbRow) (Synonyms, error) {
 	synonyms := Synonyms{
 		Word:     w.Word,
 		Synonyms: make([]string, 0),
@@ -169,7 +169,7 @@ func (s *WordService) GetSynonyms(w *WordDbRow) (Synonyms, error) {
 	return synonyms, nil
 }
 
-func (s *WordService) GetWordsForSynonym(synonym *WordDbRow) (WordsForSynonym, error) {
+func (s *WordsService) GetWordsForSynonym(synonym *WordDbRow) (WordsForSynonym, error) {
 	wordsForSynonym := WordsForSynonym{
 		Synonym: synonym.Word,
 		Words:   make([]string, 0),
