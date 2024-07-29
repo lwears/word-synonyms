@@ -19,25 +19,14 @@ func main() {
 	}
 	defer database.Close()
 
-	wordService := words.NewWordService(database)
-	wordManager := words.NewWordsHTTPHandler(*wordService)
+	wordsService := words.NewWordsService(database)
+	wordsHandler := words.NewWordsHTTPHandler(*wordsService)
 
-	mux := makeMux(wordManager)
-	handler := cors.Default().Handler(mux)
+	apiHandler := http.StripPrefix("/api", wordsHandler)
+
+	handler := cors.Default().Handler(apiHandler)
 	fmt.Println("Listening for requests...")
 	http.ListenAndServe(":8090", enforceJSONHandler(handler))
-}
-
-func makeMux(m *words.WordHTTPHandler) *http.ServeMux {
-	mux := http.NewServeMux()
-	mux.HandleFunc("POST /word", m.AddWordHandler)
-	mux.HandleFunc("GET /words", m.GetAllWordsHandler)
-	mux.HandleFunc("GET /words/{synonym}", m.GetWordsForSynonymHandler)
-
-	mux.HandleFunc("POST /synonym/{word}", m.AddSynonymHandler)
-	mux.HandleFunc("GET /synonyms/{word}", m.GetSynonymsHandler)
-
-	return mux
 }
 
 // https://www.alexedwards.net/blog/making-and-using-middleware

@@ -41,8 +41,9 @@ type WordError struct {
 	Error      string `json:"error"`
 }
 
-type WordHTTPHandler struct {
-	wordService WordService
+type WordsHTTPHandler struct {
+	wordService WordsService
+	mux         *http.ServeMux
 }
 
 func isValidWord(input string) bool {
@@ -51,13 +52,29 @@ func isValidWord(input string) bool {
 	return re.MatchString(input)
 }
 
-func NewWordsHTTPHandler(wordService WordService) *WordHTTPHandler {
-	return &WordHTTPHandler{
+func NewWordsHTTPHandler(wordService WordsService) *WordsHTTPHandler {
+	handler := &WordsHTTPHandler{
 		wordService: wordService,
+		mux:         http.NewServeMux(),
 	}
+	handler.routes()
+	return handler
 }
 
-func (h *WordHTTPHandler) AddWordHandler(w http.ResponseWriter, r *http.Request) {
+func (h *WordsHTTPHandler) routes() {
+	h.mux.HandleFunc("POST /word", h.AddWordHandler)
+	h.mux.HandleFunc("GET /words", h.GetAllWordsHandler)
+	h.mux.HandleFunc("GET /words/{synonym}", h.GetWordsForSynonymHandler)
+
+	h.mux.HandleFunc("POST /synonym/{word}", h.AddSynonymHandler)
+	h.mux.HandleFunc("GET /synonyms/{word}", h.GetSynonymsHandler)
+}
+
+func (h *WordsHTTPHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	h.mux.ServeHTTP(w, r)
+}
+
+func (h *WordsHTTPHandler) AddWordHandler(w http.ResponseWriter, r *http.Request) {
 	var req WordRequest
 
 	// Decode the JSON body
@@ -102,7 +119,7 @@ func (h *WordHTTPHandler) AddWordHandler(w http.ResponseWriter, r *http.Request)
 	}
 }
 
-func (h *WordHTTPHandler) AddSynonymHandler(w http.ResponseWriter, r *http.Request) {
+func (h *WordsHTTPHandler) AddSynonymHandler(w http.ResponseWriter, r *http.Request) {
 	var req SynonymRequest
 	word := r.PathValue("word")
 
@@ -173,7 +190,7 @@ func (h *WordHTTPHandler) AddSynonymHandler(w http.ResponseWriter, r *http.Reque
 }
 
 // This was just added for testing
-func (h *WordHTTPHandler) GetAllWordsHandler(w http.ResponseWriter, r *http.Request) {
+func (h *WordsHTTPHandler) GetAllWordsHandler(w http.ResponseWriter, r *http.Request) {
 	words, err := h.wordService.GetAll()
 	if err != nil {
 		h.errorResponse(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
@@ -187,7 +204,7 @@ func (h *WordHTTPHandler) GetAllWordsHandler(w http.ResponseWriter, r *http.Requ
 	}
 }
 
-func (h *WordHTTPHandler) GetSynonymsHandler(w http.ResponseWriter, r *http.Request) {
+func (h *WordsHTTPHandler) GetSynonymsHandler(w http.ResponseWriter, r *http.Request) {
 	word := r.PathValue("word")
 
 	// validate word
@@ -223,7 +240,7 @@ func (h *WordHTTPHandler) GetSynonymsHandler(w http.ResponseWriter, r *http.Requ
 	}
 }
 
-func (h *WordHTTPHandler) GetWordsForSynonymHandler(w http.ResponseWriter, r *http.Request) {
+func (h *WordsHTTPHandler) GetWordsForSynonymHandler(w http.ResponseWriter, r *http.Request) {
 	synonym := r.PathValue("synonym")
 
 	// validate word
@@ -259,7 +276,7 @@ func (h *WordHTTPHandler) GetWordsForSynonymHandler(w http.ResponseWriter, r *ht
 	}
 }
 
-func (h *WordHTTPHandler) errorResponse(w http.ResponseWriter, statusCode int, errorString string) {
+func (h *WordsHTTPHandler) errorResponse(w http.ResponseWriter, statusCode int, errorString string) {
 	w.WriteHeader(statusCode)
 	encodingError := json.NewEncoder(w).Encode(WordError{
 		StatusCode: statusCode,
