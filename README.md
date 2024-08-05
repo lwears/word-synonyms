@@ -15,7 +15,7 @@ word-synonyms/
 ### Prerequisites
 
 - [Go 1.22.5](https://golang.org/dl/) (for the backend)
-- [Node.js and npm](https://nodejs.org/en/download/) (for the frontend)
+- [Node.js and pnpm/npm](https://nodejs.org/en/download/) (for the frontend)
 
 ### Run API
 
