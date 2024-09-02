@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"log"
 
 	_ "modernc.org/sqlite"
 )
@@ -40,6 +41,18 @@ func NewWordsService(DB *sql.DB) WordsService {
 }
 
 func (s *WordsService) AddWord(word string) (*WordDbRow, error) {
+	tx, err := s.DB.Begin()
+	if err != nil {
+		log.Fatal(err)
+	}
+	stmt, err := tx.Prepare(InsertWord)
+	if err != nil {
+		tx.Rollback() // Rollback in case of error
+		log.Fatal(err)
+	}
+	defer stmt.Close()
+
+	_, err := stmt.ExecContext(context.Background(), )
 	result, err := s.DB.ExecContext(
 		context.Background(),
 		InsertWord, word,

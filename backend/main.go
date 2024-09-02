@@ -15,12 +15,17 @@ import (
 
 func main() {
 	if err := godotenv.Load(); err != nil {
-		fmt.Println(err)
+		log.Printf("Error loading .env file: %v", err)
 	}
+
 	dbPath := os.Getenv("DB_PATH")
+	if dbPath == "" {
+		log.Fatal("DB_PATH environment variable is not set")
+	}
+
 	database, err := database.ConnectAndInitDB(dbPath)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Failed to connect to database: %v", err)
 	}
 	defer database.Close()
 
@@ -30,8 +35,10 @@ func main() {
 	apiHandler := http.StripPrefix("/api", wordsHandler)
 
 	handler := cors.Default().Handler(apiHandler)
-	fmt.Println("Listening for requests...")
-	http.ListenAndServe(":8090", enforceJSONHandler(handler))
+	fmt.Println("Listening for requests on :8090...")
+	if err := http.ListenAndServe(":8090", enforceJSONHandler(handler)); err != nil {
+		log.Fatalf("Failed to start server: %v", err)
+	}
 }
 
 // https://www.alexedwards.net/blog/making-and-using-middleware
